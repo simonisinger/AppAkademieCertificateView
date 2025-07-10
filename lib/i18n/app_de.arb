@@ -1,0 +1,18 @@
+{
+  "invalidQrCode": "Der eingescannte QR Code ist ungültig",
+  "validQrCode": "Der eingescannte QR Code ist gültig",
+  "certificateName": "Name: {name}",
+  "@certificateName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "certificateNumber": "Zertifikatsnummer: {number}",
+  "placeholders": {
+    "number": {
+      "type": "String"
+    }
+  }
+}
