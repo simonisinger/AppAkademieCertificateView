@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:app_akademie_certificate_lib/app_akademie_certificate_lib.dart';
+import 'package:app_akademie_certificate_view/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:pointycastle/export.dart';
 
@@ -15,13 +17,17 @@ class CertificateDataCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Base64Codec base64Url = Base64Codec.urlSafe();
+    Uint8List data = base64Url.decode(base64UrlData);
     bool validation = CertificateCrypto().validate(
         publicKey,
-        base64Url.decode(base64UrlData),
+        data,
         base64Url.decode(signature),
         digestIdentifierHex
     );
     Color color = validation ? Colors.green : Colors.red;
+    AppLocalizations localizations = AppLocalizations.of(context)!;
+    Certificate certificate = Certificate.fromBuffer(data);
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.black87,
@@ -36,12 +42,29 @@ class CertificateDataCheck extends StatelessWidget {
               ),
               //color: validation ? Colors.greenAccent : Colors.redAccent
             ),
-            child: Text(
-                validation ? 'Der eingescannte QR Code ist gültig'
-                    : 'Der eingescannte QR Code ist ungültig',
-                style: TextStyle(
-                  color: color
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                    validation ? localizations.validQrCode : localizations.invalidQrCode,
+                    style: TextStyle(
+                      color: color
+                    ),
                 ),
+                SizedBox(height: 16,),
+                Text(
+                  localizations.certificateName(certificate.name),
+                  style: TextStyle(
+                      color: color
+                  ),
+                ),
+                Text(
+                  localizations.certificateNumber(certificate.certificateNumber),
+                  style: TextStyle(
+                      color: color
+                  ),
+                ),
+              ],
             ),
           ),
         ),
