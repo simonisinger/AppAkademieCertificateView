@@ -5,6 +5,8 @@ import 'package:app_akademie_certificate_view/rsa_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:web/web.dart' as web;
 
+const int totalModules = 4;
+const int totalBadges = 7;
 void main() {
   String? urlCode;
   try {

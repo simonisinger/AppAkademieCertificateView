@@ -3,10 +3,12 @@ import 'dart:typed_data';
 
 import 'package:app_akademie_certificate_lib/app_akademie_certificate_lib.dart';
 import 'package:app_akademie_certificate_view/generated/i18n/app_localizations.dart';
+import 'package:app_akademie_certificate_view/main.dart';
+import 'package:app_akademie_certificate_view/responsive_center.dart';
 import 'package:flutter/material.dart';
-import 'package:pointycastle/export.dart' hide Padding;
+import 'package:pointycastle/export.dart' hide Padding, State;
 
-class CertificateDataCheck extends StatelessWidget {
+class CertificateDataCheck extends StatefulWidget {
   final String base64UrlData;
   final String signature;
   final RSAPublicKey publicKey;
@@ -20,6 +22,12 @@ class CertificateDataCheck extends StatelessWidget {
   });
 
   @override
+  State<CertificateDataCheck> createState() => _CertificateDataCheckState();
+}
+
+class _CertificateDataCheckState extends State<CertificateDataCheck> {
+  bool _showDetails = false;
+  @override
   Widget build(BuildContext context) {
     bool validation = false;
     AppLocalizations localizations = AppLocalizations.of(context)!;
@@ -27,13 +35,13 @@ class CertificateDataCheck extends StatelessWidget {
 
     try {
       final Base64Codec base64Url = Base64Codec.urlSafe();
-      Uint8List data = base64Url.decode(base64UrlData);
+      Uint8List data = base64Url.decode(widget.base64UrlData);
       certificate = Certificate.fromBuffer(data);
       validation = CertificateCrypto().validate(
-        publicKey,
+        widget.publicKey,
         data,
-        base64Url.decode(signature),
-        digestIdentifierHex,
+        base64Url.decode(widget.signature),
+        widget.digestIdentifierHex,
       );
     } catch (e) {
       validation = false;
@@ -44,8 +52,9 @@ class CertificateDataCheck extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(32),
         child: SingleChildScrollView(
-          child: Center(
+          child: ResponsiveCenter(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
@@ -179,16 +188,74 @@ class CertificateDataCheck extends StatelessWidget {
                               value: certificate?.certificateNumber ?? 'N/A',
                             ),
 
-                            // Modules (only show if validation successful and modules exist)
+                            // Expandable Details Button
                             if (validation &&
+                                ((certificate?.modules != null &&
+                                        certificate!.modules.isNotEmpty) ||
+                                    (certificate?.badges != null &&
+                                        certificate!.badges.isNotEmpty))) ...[
+                              const SizedBox(height: 16),
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _showDetails = !_showDetails;
+                                  });
+                                },
+                                borderRadius: BorderRadius.circular(8),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF3A3A3A),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: const Color(
+                                        0xFF4CAF50,
+                                      ).withAlpha(128),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        _showDetails
+                                            ? Icons.expand_less
+                                            : Icons.expand_more,
+                                        color: Colors.white.withAlpha(179),
+                                        size: 20,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        _showDetails
+                                            ? 'Details verstecken'
+                                            : _buildSummaryText(certificate),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white.withAlpha(230),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+
+                            // Modules (only show if validation successful, modules exist, and details are expanded)
+                            if (validation &&
+                                _showDetails &&
                                 certificate?.modules != null &&
                                 certificate!.modules.isNotEmpty) ...[
                               const SizedBox(height: 12),
                               _buildModulesSection(certificate.modules),
                             ],
 
-                            // Badges (only show if validation successful and badges exist)
+                            // Badges (only show if validation successful, badges exist, and details are expanded)
                             if (validation &&
+                                _showDetails &&
                                 certificate?.badges != null &&
                                 certificate!.badges.isNotEmpty) ...[
                               const SizedBox(height: 12),
@@ -233,6 +300,26 @@ class CertificateDataCheck extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _buildSummaryText(Certificate? certificate) {
+    List<String> parts = [];
+
+    if (certificate?.modules != null && certificate!.modules.isNotEmpty) {
+      final moduleCount = certificate.modules.length;
+      parts.add('$moduleCount/$totalModules Modulen');
+    } else {
+      parts.add('0/$totalModules Modulen');
+    }
+
+    if (certificate?.badges != null && certificate!.badges.isNotEmpty) {
+      final badgeCount = certificate.badges.length;
+      parts.add('$badgeCount/$totalBadges Badges');
+    } else {
+      parts.add('0/$totalBadges Badges');
+    }
+
+    return parts.join(', ');
   }
 
   Widget _buildDetailRow({
