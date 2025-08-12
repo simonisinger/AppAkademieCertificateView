@@ -50,6 +50,7 @@ class AppAkademieCertificateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'App Akademie Zertifikat Viewer',
       darkTheme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
