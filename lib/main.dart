@@ -9,7 +9,8 @@ void main() {
   String? urlCode;
   try {
     final uri = Uri.parse(web.window.location.href);
-    urlCode = uri.queryParameters['code'];
+    final pathSegments = uri.pathSegments;
+    urlCode = pathSegments.isNotEmpty ? pathSegments.last : null;
   } catch (e) {
     urlCode = null;
   }
