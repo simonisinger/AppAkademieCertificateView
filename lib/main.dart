@@ -10,11 +10,10 @@ void main() {
   try {
     final uri = Uri.parse(web.window.location.href);
     final pathSegments = uri.pathSegments;
-    urlCode = pathSegments.isNotEmpty ? pathSegments.last : null;
+    urlCode = pathSegments.isNotEmpty ? pathSegments.join('/') : null;
   } catch (e) {
     urlCode = null;
   }
-
   final digestIdentifierHex = 'AAAAAA';
   final publicKeyPem = '''-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo9ozzgqbhI2+12qYoY1O
