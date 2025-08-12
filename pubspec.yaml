@@ -9,8 +9,8 @@ environment:
 
 dependencies:
   app_akademie_certificate_lib:
-#    git: https://github.com/simonisinger/AppAkademieCertificateLib.git
-    path: ../app_akademie_certificate_lib
+    git: https://github.com/simonisinger/AppAkademieCertificateLib.git
+    # path: ../app_akademie_certificate_lib
   pointycastle: any
   flutter:
     sdk: flutter
