@@ -33,4 +33,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noQrCodeProvided => 'Kein QR-Code bereitgestellt';
+
+  @override
+  String get credits =>
+      'Entwickelt von den Batch #9 Teilnehmern Simon Isinger und Jürgen Kuck';
 }

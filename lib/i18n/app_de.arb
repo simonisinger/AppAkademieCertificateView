@@ -19,5 +19,6 @@
   },
   "scanQrCodeTitle": "QR-Code scannen",
   "scanQrCodeInstruction": "Bitte scannen Sie den QR-Code eines App Akademie Zertifikats mit der Kamera Ihres Handys.",
-  "noQrCodeProvided": "Kein QR-Code bereitgestellt"
+  "noQrCodeProvided": "Kein QR-Code bereitgestellt",
+  "credits": "Entwickelt von den Batch #9 Teilnehmern Simon Isinger und Jürgen Kuck"
 }

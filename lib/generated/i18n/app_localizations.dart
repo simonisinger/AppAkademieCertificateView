@@ -139,6 +139,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No QR code provided'**
   String get noQrCodeProvided;
+
+  /// No description provided for @credits.
+  ///
+  /// In en, this message translates to:
+  /// **'Developed by Batch #9 participants Simon Isinger and Jürgen Kuck'**
+  String get credits;
 }
 
 class _AppLocalizationsDelegate
