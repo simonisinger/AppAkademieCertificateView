@@ -42,6 +42,8 @@ class AppAkademieCertificateView extends StatelessWidget {
     final publicKey = RSAParser.parsePublicKeyFromPem(publicKeyPem);
     return MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('de', 'DE'),
       home: CertificateDataCheck(
         base64UrlData: _urlParts.base64UrlData,
         publicKey: publicKey,
