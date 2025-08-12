@@ -16,5 +16,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "scanQrCodeTitle": "Scan QR Code",
+  "scanQrCodeInstruction": "Please scan the QR code of an App Akademie certificate with your phone's camera.",
+  "noQrCodeProvided": "No QR code provided"
 }

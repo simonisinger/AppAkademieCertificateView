@@ -121,6 +121,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Certificate number: {number}'**
   String certificateNumber(String number);
+
+  /// No description provided for @scanQrCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scanQrCodeTitle;
+
+  /// No description provided for @scanQrCodeInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Please scan the QR code of an App Akademie certificate with your phone\'s camera.'**
+  String get scanQrCodeInstruction;
+
+  /// No description provided for @noQrCodeProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'No QR code provided'**
+  String get noQrCodeProvided;
 }
 
 class _AppLocalizationsDelegate

@@ -10,9 +10,14 @@
     }
   },
   "certificateNumber": "Zertifikatsnummer: {number}",
-  "placeholders": {
-    "number": {
-      "type": "String"
+  "@certificateNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
     }
-  }
+  },
+  "scanQrCodeTitle": "QR-Code scannen",
+  "scanQrCodeInstruction": "Bitte scannen Sie den QR-Code eines App Akademie Zertifikats mit der Kamera Ihres Handys.",
+  "noQrCodeProvided": "Kein QR-Code bereitgestellt"
 }

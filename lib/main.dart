@@ -1,11 +1,19 @@
 import 'package:app_akademie_certificate_view/certificate_data_check.dart';
 import 'package:app_akademie_certificate_view/generated/i18n/app_localizations.dart';
+import 'package:app_akademie_certificate_view/qr_code_scan_screen.dart';
 import 'package:app_akademie_certificate_view/rsa_parser.dart';
 import 'package:flutter/material.dart';
+import 'package:web/web.dart' as web;
 
 void main() {
-  final String url =
-      'https://cert.app-akademie.com/CgNEYXYSDAizm-zEBhCwwu-4AxoMCLOF_M8GEIjxv7sDIPgKKgUAAQIDBDIFMTMzMzM6BAABAgNCBwABAgMEBQZIAQ==/JdYuHIovAqYjGC33MsbQBHQYtXvZRU0n3oUzzrLGBxvFRt9mLS-rdgN3Eo2SOqKE2pF3uVGScYzK37A9PcRGVtIHvKWQGu1r07zNsDdbGa3Zmylq5l6VHszOwOThbqCYgWWR-mLDt6HrOA2XnNwFTg8Afwyb58EyRz36Ltcyv2cVImwXuaMPHidMGAjZt9Zqwzi7YNgkUyUWXInZfkkjzHXY2OqIUNyg00YRWp9soVqy4g4mlMxtz_0Gpnw_JnykmRWIvYHTbtaO4onGSyhhHS8ZYXWi8UDpdcs-rEPzrFGSqYQ2TViKcZQacBec8qse2Heq0z_jZeN4VPdNp4vCRg==';
+  String? urlCode;
+  try {
+    final uri = Uri.parse(web.window.location.href);
+    urlCode = uri.queryParameters['code'];
+  } catch (e) {
+    urlCode = null;
+  }
+
   final digestIdentifierHex = 'AAAAAA';
   final publicKeyPem = '''-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo9ozzgqbhI2+12qYoY1O
@@ -19,7 +27,7 @@ sQIDAQAB
 ''';
   runApp(
     AppAkademieCertificateView(
-      url: url,
+      urlCode: urlCode,
       digestIdentifierHex: digestIdentifierHex,
       publicKeyPem: publicKeyPem,
     ),
@@ -27,35 +35,52 @@ sQIDAQAB
 }
 
 class AppAkademieCertificateView extends StatelessWidget {
-  final String url;
+  final String? urlCode;
   final String digestIdentifierHex;
   final String publicKeyPem;
   const AppAkademieCertificateView({
     super.key,
-    required this.url,
+    required this.urlCode,
     required this.digestIdentifierHex,
     required this.publicKeyPem,
   });
 
   @override
   Widget build(BuildContext context) {
-    final publicKey = RSAParser.parsePublicKeyFromPem(publicKeyPem);
     return MaterialApp(
+      darkTheme: ThemeData.from(
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: Colors.lightBlueAccent,
+        ),
+      ),
+      themeMode: ThemeMode.dark,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: const Locale('de', 'DE'),
-      home: CertificateDataCheck(
-        base64UrlData: _urlParts.base64UrlData,
-        publicKey: publicKey,
-        digestIdentifierHex: digestIdentifierHex,
-        signature: _urlParts.signature,
-      ),
+      home:
+          urlCode == null || urlCode!.isEmpty
+              ? const QrCodeScanScreen()
+              : _buildCertificateView(),
+    );
+  }
+
+  Widget _buildCertificateView() {
+    final publicKey = RSAParser.parsePublicKeyFromPem(publicKeyPem);
+    return CertificateDataCheck(
+      base64UrlData: _urlParts.base64UrlData,
+      publicKey: publicKey,
+      digestIdentifierHex: digestIdentifierHex,
+      signature: _urlParts.signature,
     );
   }
 
   ({String signature, String base64UrlData}) get _urlParts {
+    if (urlCode == null || urlCode!.isEmpty) {
+      return (signature: '', base64UrlData: '');
+    }
     try {
-      final parts = url.split('/');
+      final parts = urlCode!.split('/');
       return (signature: parts.last, base64UrlData: parts[parts.length - 2]);
     } catch (_) {
       return (signature: '', base64UrlData: '');

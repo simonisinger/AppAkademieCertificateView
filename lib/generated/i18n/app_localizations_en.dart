@@ -23,4 +23,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String certificateNumber(String number) {
     return 'Certificate number: $number';
   }
+
+  @override
+  String get scanQrCodeTitle => 'Scan QR Code';
+
+  @override
+  String get scanQrCodeInstruction =>
+      'Please scan the QR code of an App Akademie certificate with your phone\'s camera.';
+
+  @override
+  String get noQrCodeProvided => 'No QR code provided';
 }

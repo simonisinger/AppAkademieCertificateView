@@ -23,4 +23,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String certificateNumber(String number) {
     return 'Zertifikatsnummer: $number';
   }
+
+  @override
+  String get scanQrCodeTitle => 'QR-Code scannen';
+
+  @override
+  String get scanQrCodeInstruction =>
+      'Bitte scannen Sie den QR-Code eines App Akademie Zertifikats mit der Kamera Ihres Handys.';
+
+  @override
+  String get noQrCodeProvided => 'Kein QR-Code bereitgestellt';
 }

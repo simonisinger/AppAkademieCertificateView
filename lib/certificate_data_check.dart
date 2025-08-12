@@ -21,17 +21,23 @@ class CertificateDataCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Base64Codec base64Url = Base64Codec.urlSafe();
-    Uint8List data = base64Url.decode(base64UrlData);
-    bool validation = CertificateCrypto().validate(
-      publicKey,
-      data,
-      base64Url.decode(signature),
-      digestIdentifierHex,
-    );
-
+    bool validation = false;
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    Certificate certificate = Certificate.fromBuffer(data);
+    Certificate? certificate;
+
+    try {
+      final Base64Codec base64Url = Base64Codec.urlSafe();
+      Uint8List data = base64Url.decode(base64UrlData);
+      certificate = Certificate.fromBuffer(data);
+      validation = CertificateCrypto().validate(
+        publicKey,
+        data,
+        base64Url.decode(signature),
+        digestIdentifierHex,
+      );
+    } catch (e) {
+      validation = false;
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
@@ -147,7 +153,7 @@ class CertificateDataCheck extends StatelessWidget {
                     _buildDetailRow(
                       icon: Icons.person_outline,
                       label: 'Name',
-                      value: certificate.name,
+                      value: certificate?.name ?? 'N/A',
                     ),
 
                     const SizedBox(height: 12),
@@ -156,7 +162,7 @@ class CertificateDataCheck extends StatelessWidget {
                     _buildDetailRow(
                       icon: Icons.confirmation_number_outlined,
                       label: 'Zertifikatsnummer',
-                      value: certificate.certificateNumber,
+                      value: certificate?.certificateNumber ?? 'N/A',
                     ),
                   ],
                 ),
