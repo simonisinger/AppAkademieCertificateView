@@ -188,6 +188,28 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                               value: certificate?.certificateNumber ?? 'N/A',
                             ),
 
+                            const SizedBox(height: 12),
+
+                            // Training Start
+                            _buildDetailRow(
+                              icon: Icons.play_arrow_outlined,
+                              label: 'Trainingsstart',
+                              value:
+                                  _formatDate(certificate?.trainingStart) ??
+                                  'N/A',
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            // Training End
+                            _buildDetailRow(
+                              icon: Icons.stop_outlined,
+                              label: 'Trainingsende',
+                              value:
+                                  _formatDate(certificate?.trainingEnd) ??
+                                  'N/A',
+                            ),
+
                             // Expandable Details Button
                             if (validation &&
                                 ((certificate?.modules != null &&
@@ -320,6 +342,93 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
     }
 
     return parts.join(', ');
+  }
+
+  String? _formatDate(dynamic date) {
+    if (date == null) return null;
+
+    try {
+      // If date is already a string, check if it's a valid date format
+      if (date is String) {
+        // Try to parse common date formats
+        try {
+          final parsedDate = DateTime.parse(date);
+          // Use local time and add a day to compensate
+          return '${parsedDate.day.toString().padLeft(2, '0')}.${parsedDate.month.toString().padLeft(2, '0')}.${parsedDate.year}';
+        } catch (e) {
+          return date;
+        }
+      }
+
+      // If date is a DateTime object, format it
+      if (date is DateTime) {
+        // Use local time
+        return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
+      }
+
+      // Handle protobuf Timestamp objects
+      if (date.runtimeType.toString().contains('Timestamp')) {
+        try {
+          // Try to access seconds field from protobuf Timestamp
+          final seconds = date.seconds;
+          if (seconds != null) {
+            // Create local DateTime and add one day to compensate for timezone
+            final dateTime = DateTime.fromMillisecondsSinceEpoch(
+              seconds * 1000,
+            ).add(const Duration(days: 1));
+            return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year}';
+          }
+        } catch (e) {
+          // If we can't access seconds, try to convert to DateTime
+          try {
+            final dateTime = date.toDateTime();
+            // Add one day to compensate
+            final adjustedDate = dateTime.add(const Duration(days: 1));
+            return '${adjustedDate.day.toString().padLeft(2, '0')}.${adjustedDate.month.toString().padLeft(2, '0')}.${adjustedDate.year}';
+          } catch (e2) {
+            // Fallback: try reflection-like approach
+            try {
+              final str = date.toString();
+              // Look for seconds field in string representation
+              final match = RegExp(r'seconds:\s*(\d+)').firstMatch(str);
+              if (match != null) {
+                final seconds = int.parse(match.group(1)!);
+                // Create local DateTime and add one day
+                final dateTime = DateTime.fromMillisecondsSinceEpoch(
+                  seconds * 1000,
+                ).add(const Duration(days: 1));
+                return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year}';
+              }
+            } catch (e3) {
+              // Continue to fallback
+            }
+          }
+        }
+      }
+
+      // Try to parse if it's a timestamp or other format
+      if (date is int) {
+        // Try both milliseconds and seconds
+        DateTime dateTime;
+        if (date > 1000000000000) {
+          // Likely milliseconds - create as local time and add one day
+          dateTime = DateTime.fromMillisecondsSinceEpoch(
+            date,
+          ).add(const Duration(days: 1));
+        } else {
+          // Likely seconds - create as local time and add one day
+          dateTime = DateTime.fromMillisecondsSinceEpoch(
+            date * 1000,
+          ).add(const Duration(days: 1));
+        }
+        return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year}';
+      }
+
+      // Final fallback: try to convert to string and return
+      return date.toString();
+    } catch (e) {
+      return 'N/A';
+    }
   }
 
   Widget _buildDetailRow({
