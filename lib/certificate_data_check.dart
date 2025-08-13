@@ -50,7 +50,7 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
     return Scaffold(
       backgroundColor: const Color(0xFF1A1A1A),
       body: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(
           child: ResponsiveCenter(
             child: Column(
@@ -366,17 +366,14 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
       // Try toDateTime method for protobuf Timestamp objects
       try {
         final dateTime = date.toDateTime();
-        final adjustedDate = dateTime.add(const Duration(days: 1));
-        return '${adjustedDate.day.toString().padLeft(2, '0')}.${adjustedDate.month.toString().padLeft(2, '0')}.${adjustedDate.year}';
+        return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year}';
       } catch (e) {
         // Fallback to string parsing
         final str = date.toString();
         final secondsMatch = RegExp(r'seconds:\s*(\d+)').firstMatch(str);
         if (secondsMatch != null) {
           final seconds = int.parse(secondsMatch.group(1)!);
-          final dateTime = DateTime.fromMillisecondsSinceEpoch(
-            seconds * 1000,
-          ).add(const Duration(days: 1));
+          final dateTime = DateTime.fromMillisecondsSinceEpoch(seconds * 1000);
           return '${dateTime.day.toString().padLeft(2, '0')}.${dateTime.month.toString().padLeft(2, '0')}.${dateTime.year}';
         }
       }
