@@ -35,6 +35,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noQrCodeProvided => 'No QR code provided';
 
   @override
+  String get completionCertificate => 'Completion Certificate';
+
+  @override
+  String get participationConfirmation => 'Participation Confirmation';
+
+  @override
   String get credits =>
       'Developed by Batch #9 participants Simon Isinger and Jürgen Kuck';
 }

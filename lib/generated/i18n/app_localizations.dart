@@ -140,6 +140,18 @@ abstract class AppLocalizations {
   /// **'No QR code provided'**
   String get noQrCodeProvided;
 
+  /// No description provided for @completionCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion Certificate'**
+  String get completionCertificate;
+
+  /// No description provided for @participationConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Participation Confirmation'**
+  String get participationConfirmation;
+
   /// No description provided for @credits.
   ///
   /// In en, this message translates to:

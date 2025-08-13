@@ -190,6 +190,18 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
 
                             const SizedBox(height: 12),
 
+                            // Certificate Type
+                            _buildDetailRow(
+                              icon: Icons.verified_outlined,
+                              label: 'Typ',
+                              value:
+                                  certificate?.isCompletion == true
+                                      ? localizations.completionCertificate
+                                      : localizations.participationConfirmation,
+                            ),
+
+                            const SizedBox(height: 12),
+
                             // Training Start
                             _buildDetailRow(
                               icon: Icons.play_arrow_outlined,
@@ -212,6 +224,7 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
 
                             // Expandable Details Button
                             if (validation &&
+                                certificate?.isCompletion == true &&
                                 ((certificate?.modules != null &&
                                         certificate!.modules.isNotEmpty) ||
                                     (certificate?.badges != null &&
@@ -266,8 +279,9 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                               ),
                             ],
 
-                            // Modules (only show if validation successful, modules exist, and details are expanded)
+                            // Modules (only show if validation successful, isCompletion is true, modules exist, and details are expanded)
                             if (validation &&
+                                certificate?.isCompletion == true &&
                                 _showDetails &&
                                 certificate?.modules != null &&
                                 certificate!.modules.isNotEmpty) ...[
@@ -275,8 +289,9 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                               _buildModulesSection(certificate.modules),
                             ],
 
-                            // Badges (only show if validation successful, badges exist, and details are expanded)
+                            // Badges (only show if validation successful, isCompletion is true, badges exist, and details are expanded)
                             if (validation &&
+                                certificate?.isCompletion == true &&
                                 _showDetails &&
                                 certificate?.badges != null &&
                                 certificate!.badges.isNotEmpty) ...[

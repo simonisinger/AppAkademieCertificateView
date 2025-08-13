@@ -35,6 +35,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noQrCodeProvided => 'Kein QR-Code bereitgestellt';
 
   @override
+  String get completionCertificate => 'Abschlusszertifikat';
+
+  @override
+  String get participationConfirmation => 'Teilnahmebescheinigung';
+
+  @override
   String get credits =>
       'Entwickelt von den Batch #9 Teilnehmern Simon Isinger und Jürgen Kuck';
 }
