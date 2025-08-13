@@ -193,7 +193,7 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                             // Training Start
                             _buildDetailRow(
                               icon: Icons.play_arrow_outlined,
-                              label: 'Trainingsstart',
+                              label: 'Kursstart',
                               value:
                                   _formatDate(certificate?.trainingStart) ??
                                   'N/A',
@@ -204,7 +204,7 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                             // Training End
                             _buildDetailRow(
                               icon: Icons.stop_outlined,
-                              label: 'Trainingsende',
+                              label: 'Kurssende',
                               value:
                                   _formatDate(certificate?.trainingEnd) ??
                                   'N/A',
