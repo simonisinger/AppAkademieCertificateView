@@ -263,14 +263,16 @@ class _CertificateDataCheckState extends State<CertificateDataCheck> {
                                         size: 20,
                                       ),
                                       const SizedBox(width: 8),
-                                      Text(
-                                        _showDetails
-                                            ? 'Details verstecken'
-                                            : _buildSummaryText(certificate),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.white.withAlpha(230),
-                                          fontWeight: FontWeight.w500,
+                                      Expanded(
+                                        child: Text(
+                                          _showDetails
+                                              ? 'Details verstecken'
+                                              : _buildSummaryText(certificate),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white.withAlpha(230),
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ],
